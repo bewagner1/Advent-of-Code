@@ -118,10 +118,47 @@ def part_one(input):
     print(words_found)
 
 
+def confirm_xmas(puzzle, r, c):
+    string = ""
+    for i in range(3):
+        string += puzzle[r-i][c+i]
+    if string == "MAS":
+        return 1
+    return 0
+
+def part_two(input):
+    width = len(input[0])
+    height = len(input)
+    xmas_found = 0
+    for r in range(height):
+        for c in range(width):
+            if input[r][c] != "A":
+                continue
+            if bounds_check(r-1, c-1, width, height) and bounds_check(r+1, c+1, width, height):
+                if input[r-1][c-1] == "M" and input[r+1][c+1] == "S":
+                    pass
+                elif input[r-1][c-1] == "S" and input[r+1][c+1] == "M":
+                    pass
+                else:
+                    continue
+            else:
+                continue
+            if bounds_check(r+1, c-1, width, height) and bounds_check(r-1, c+1, width, height):
+                if input[r+1][c-1] == "M" and input[r-1][c+1] == "S":
+                    pass
+                elif input[r+1][c-1] == "S" and input[r-1][c+1] == "M":
+                    pass
+                else:
+                    continue
+            else:
+                continue
+            xmas_found += 1
+
+    print(xmas_found)
 
 if __name__ == '__main__':
     
-    FILE_PATH = "./puzzles/04.txt"
+    FILE_PATH = "./puzzles/04_ex.txt"
     with open(FILE_PATH, 'r') as f:
         text = f.readlines()
 
@@ -133,3 +170,4 @@ if __name__ == '__main__':
             cleaned.append(line)
 
     part_one(cleaned)
+    part_two(cleaned)
