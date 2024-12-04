@@ -64,7 +64,7 @@ def check_down_left(puzzle, row, col):
     return 0
 
 
-def check_down(puzzle, row, col, edge=False):
+def check_down(puzzle, row, col):
     string = ""
     for i in range(4):
         string += puzzle[row+i][col]
@@ -76,7 +76,7 @@ def check_down(puzzle, row, col, edge=False):
 def check_down_right(puzzle, row, col):
     string = ""
     for i in range(4):
-        string += puzzle[row+i][col+1]
+        string += puzzle[row+i][col+i]
     if string == "XMAS":
         return 1
     return 0
@@ -106,7 +106,7 @@ def part_one(input):
             if bounds_check(r, c-3, width, height):
                 words_found += check_left(input, r, c)
             # Check Down Left
-            if bounds_check(r+3, c+3, width, height):
+            if bounds_check(r+3, c-3, width, height):
                 words_found += check_down_left(input, r, c)
             # Check Down
             if bounds_check(r+3, c, width, height):
