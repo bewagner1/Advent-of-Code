@@ -118,13 +118,17 @@ def part_one(input):
     print(words_found)
 
 
-def confirm_xmas(puzzle, r, c):
-    string = ""
-    for i in range(3):
-        string += puzzle[r-i][c+i]
-    if string == "MAS":
-        return 1
-    return 0
+def check_left_to_right(puzzle, r, c):
+    if (puzzle[r-1][c-1] == "M" and puzzle[r+1][c+1] == "S") or (puzzle[r-1][c-1] == "S" and puzzle[r+1][c+1] == "M"):
+        return True
+    return False
+
+
+def check_right_to_left(puzzle, r, c):
+    if (puzzle[r+1][c-1] == "M" and puzzle[r-1][c+1] == "S") or (puzzle[r+1][c-1] == "S" and puzzle[r-1][c+1] == "M"):
+        return True
+    return False
+
 
 def part_two(input):
     width = len(input[0])
@@ -134,27 +138,15 @@ def part_two(input):
         for c in range(width):
             if input[r][c] != "A":
                 continue
-            if bounds_check(r-1, c-1, width, height) and bounds_check(r+1, c+1, width, height):
-                if input[r-1][c-1] == "M" and input[r+1][c+1] == "S":
-                    pass
-                elif input[r-1][c-1] == "S" and input[r+1][c+1] == "M":
-                    pass
-                else:
-                    continue
-            else:
-                continue
-            if bounds_check(r+1, c-1, width, height) and bounds_check(r-1, c+1, width, height):
-                if input[r+1][c-1] == "M" and input[r-1][c+1] == "S":
-                    pass
-                elif input[r+1][c-1] == "S" and input[r-1][c+1] == "M":
-                    pass
-                else:
-                    continue
-            else:
-                continue
-            xmas_found += 1
+            if bounds_check(r-1, c-1, width, height) and bounds_check(r+1, c+1, width, height) and \
+                bounds_check(r+1, c-1, width, height) and bounds_check(r-1, c+1, width, height):
+
+                if check_left_to_right(input, r, c) and check_right_to_left(input, r, c):
+                    xmas_found += 1
 
     print(xmas_found)
+
+
 
 if __name__ == '__main__':
     
