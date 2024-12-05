@@ -26,11 +26,11 @@ def build_hash(rules):
 def validate(hsh, update):
 
     pages = update.split(',')
-    for i, p in enumerate(pages):
+    for i, p in enumerate(pages[1:]):
         if p not in hsh.keys():
             continue
         for b in hsh[p]:
-            if b in pages[:i]:
+            if b in pages[:i+1]:
                 return False
             
     return True
@@ -54,12 +54,19 @@ def part_one(rules, updates):
     print(sm)
 
 
-def fix(update):
+def fix(hsh, update):
 
     pages = update.split(',')
-    fixed = []
+    for i in range(1, len(pages)):
+        if pages[i] not in hsh.keys():
+            continue
+        for j in range(i):
+            if pages[j] in hsh[pages[i]]:
+                temp = pages[i]
+                pages[i] = pages[j]
+                pages[j] = temp
 
-    return ','.join(fixed)
+    return ','.join(pages)
 
 
 def part_two(rules, updates):
@@ -69,7 +76,7 @@ def part_two(rules, updates):
 
     for update in updates:
         if not validate(hsh, update):
-            sm += get_middle(fix(update))
+            sm += get_middle(fix(hsh, update))
 
     print(sm)
 
