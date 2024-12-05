@@ -54,6 +54,26 @@ def part_one(rules, updates):
     print(sm)
 
 
+def fix(update):
+
+    pages = update.split(',')
+    fixed = []
+
+    return ','.join(fixed)
+
+
+def part_two(rules, updates):
+
+    sm = 0
+    hsh = build_hash(rules)
+
+    for update in updates:
+        if not validate(hsh, update):
+            sm += get_middle(fix(update))
+
+    print(sm)
+
+
 
 if __name__ == '__main__':
 
@@ -69,3 +89,4 @@ if __name__ == '__main__':
     updates = strip_newln(text[i+1:])
 
     part_one(rules, updates)
+    part_two(rules, updates)
