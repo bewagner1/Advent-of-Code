@@ -24,17 +24,40 @@ def build_hash(rules):
 
 
 def validate(hsh, update):
-    return
+
+    pages = update.split(',')
+    for i, p in enumerate(pages):
+        if p not in hsh.keys():
+            continue
+        for b in hsh[p]:
+            if b in pages[:i]:
+                return False
+            
+    return True
 
 
 def get_middle(update):
-    return
+    pages = update.split(',')
+    mid = len(pages) // 2
+    return int(pages[mid])
+
+
+def part_one(rules, updates):
+
+    sm = 0
+    hsh = build_hash(rules)
+
+    for update in updates:
+        if validate(hsh, update):
+            sm += get_middle(update)
+
+    print(sm)
 
 
 
 if __name__ == '__main__':
 
-    FILE_PATH = "./puzzles/05_ex.txt"
+    FILE_PATH = "./puzzles/05.txt"
 
     with open(FILE_PATH, 'r') as f:
         text = f.readlines()
@@ -44,3 +67,5 @@ if __name__ == '__main__':
         i += 1
     rules = strip_newln(text[:i])
     updates = strip_newln(text[i+1:])
+
+    part_one(rules, updates)
