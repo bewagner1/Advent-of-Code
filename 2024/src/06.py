@@ -50,20 +50,60 @@ def text_to_map(input):
     return mp
 
 
-def go_up():
-    return
+def go_up(row, col, map):
+
+    r = row
+
+    while bounds_check(r-1, col, len(map[0]), len(map)):
+        map[r][col] = 'X'
+        if map[r-1][col] == '#':
+            return r
+        r -= 1
+
+    map[r][col] = 'X'
+    return -1
 
 
-def go_down():
-    return
+def go_down(row, col, map):
+
+    r = row
+
+    while bounds_check(r+1, col, len(map[0]), len(map)):
+        map[r][col] = 'X'
+        if map[r+1][col] == '#':
+            return r
+        r += 1
+
+    map[r][col] = 'X'
+    return -1
 
 
-def go_left():
-    return
+def go_left(row, col, map):
+
+    c = col
+
+    while bounds_check(row, c-1, len(map[0]), len(map)):
+        map[row][c] = 'X'
+        if map[row][c-1] == '#':
+            return c
+        c -= 1
+
+    map[row][c] = 'X'
+    return c
 
 
-def go_right():
-    return
+def go_right(row, col, map):
+
+    c = col
+
+    while bounds_check(row, c+1, len(map[0]), len(map)):
+        map[row][c] = 'X'
+        if map[row][c+1] == '#':
+            return c
+        c += 1
+
+    map[row][c] = 'X'
+    return -1
 
 
 def part_one(map):
@@ -71,20 +111,20 @@ def part_one(map):
     h = len(map)
     w = len(map[0])
 
-    x, y, dir = find_agent(map)
+    r, c, dir = find_agent(map)
 
-    while bounds_check(x, y, w, h):
+    while bounds_check(r, c, w, h):
         if dir == "up":
-            x, y = go_up()
+            r = go_up(r, c, map)
             dir = "right"
         elif dir == "right":
-            x, y, = go_right()
+            c = go_right(r, c, map)
             dir = "down"
         elif dir == "down":
-            x, y, = go_down()
+            r = go_down(r, c, map)
             dir = "left"
         elif dir == "left":
-            x, y, = go_left()
+            c = go_left(r, c, map)
             dir = "up"
 
     print(count(map))
@@ -93,7 +133,7 @@ def part_one(map):
 
 if __name__ == '__main__':
 
-    FILE_PATH = "./puzzles/06_ex.txt"
+    FILE_PATH = "./puzzles/06.txt"
     with open(FILE_PATH, 'r') as f:
         text = f.readlines()
     
