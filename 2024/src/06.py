@@ -1,4 +1,5 @@
 import sys
+from copy import deepcopy
 sys.path.append("../puzzles")
 
 
@@ -130,13 +131,80 @@ def part_one(map):
     print(count(map))
 
 
+def loops(r, c, dir, map):
+
+    seen = []
+    while bounds_check(r, c, len(map[0]), len(map)):
+        if dir == "up":
+            r = go_up(r, c, map)
+            if (r, c, dir) in seen:
+                return True
+            seen.append((r, c, dir))
+            dir = "right"
+        elif dir == "right":
+            c = go_right(r, c, map)
+            if (r, c, dir) in seen:
+                return True
+            seen.append((r, c, dir))
+            dir = "down"
+        elif dir == "down":
+            r = go_down(r, c, map)
+            if (r, c, dir) in seen:
+                return True
+            seen.append((r, c, dir))
+            dir = "left"
+        elif dir == "left":
+            c = go_left(r, c, map)
+            if (r, c, dir) in seen:
+                return True
+            seen.append((r, c, dir))
+            dir = "up"
+
+    return False
+
+
+def part_two(map, other_map, dct):
+
+
+
+    h, w = len(map), len(map[0])
+    r, c, dir = find_agent(map)
+    cnt = 0
+    pos = []
+
+    for i in range(h):
+        for j in range(w):
+            if i == 5 and j == 4:
+                x = 5
+            if map[i][j] != 'X':
+                continue
+            other_map[i][j] = '#'
+            if loops(r, c, dir, other_map):
+                cnt += 1
+                pos.append((i, j))
+            other_map[i][j] = '.'
+            other_map[r][c] = dct[dir]
+
+    print(cnt)
+
+    return pos
+
+
 
 if __name__ == '__main__':
 
-    FILE_PATH = "./puzzles/06.txt"
+    FILE_PATH = "./puzzles/06_ex.txt"
     with open(FILE_PATH, 'r') as f:
         text = f.readlines()
     
     map = text_to_map(text)
+    r, c, dir = find_agent(map)
+    dct = {"up" : '^',
+           "down" : 'v',
+           "right" : '>',
+           "left" : '<'}
+    other_map = deepcopy(map)
 
     part_one(map)
+    map[r][c] = dct[dir]
+    pos = part_two(map, other_map, dct)
