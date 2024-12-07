@@ -52,7 +52,7 @@ def part_one(input):
 
 if __name__ =='__main__':
 
-    FILE_PATH = "./puzzles/07_ex.txt"
+    FILE_PATH = "./puzzles/07.txt"
     with open(FILE_PATH, 'r') as f:
         text = f.readlines()
 
