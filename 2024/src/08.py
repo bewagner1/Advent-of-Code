@@ -17,8 +17,20 @@ def bounds_check(r, c, w, h):
     return True
 
 
-def is_node(r, c, map):
-    return
+def search(r, c, input):
+    width = len(input[0])
+    height = len(input)
+    count = 0
+    for i in range(len(input)):
+        for j in range(len(input[0])):
+            if r == i and c == j:
+                continue
+            delta_h = r - i
+            delta_w = c - j
+            if input[i][j] == input[r][c] and bounds_check(r+2*delta_h, c+2*delta_w, width, height):
+                count += 1
+
+    return count
 
 def part_one(input):
 
@@ -28,7 +40,7 @@ def part_one(input):
     n_nodes = 0
     for i in range(height):
         for j in range(width):
-            if is_node(i, j, input):
+            if input[i][j] != '.' and search(i, j, input):
                 n_nodes += 1
 
     print(n_nodes)
