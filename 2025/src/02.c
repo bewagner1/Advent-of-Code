@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
     if (argc != 3)
     {
-        printf("Usage: ./01.out <path/to/puzzle.txt> <part>\n");
+        printf("Usage: ./02.out <path/to/puzzle.txt> <part>\n");
         printf("       <path/to/puzzle>: path from cwd to puzzle\n");
         printf("       <part>: 1 or 2\n");
         exit(1);
@@ -86,7 +86,7 @@ int is_invalid(char* id, int len, int part)
             flag = 1;
             for (int k = 1; k < i; k++)
             {
-                if (strncmp(id, id + k * sub_l, sub_l) != 0) {
+                if (strncmp(id, id + k * sub_l, sub_l)) {
                     flag = 0;
                     break;
                 }
