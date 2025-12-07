@@ -1,4 +1,4 @@
-all: 01 02 03
+all: 01 02 03 05
 
 01: src/01.c
 	gcc -g -Wall -Werror -o 01.out ./src/01.c
@@ -8,6 +8,9 @@ all: 01 02 03
 
 03: src/03.c
 	gcc -g -Wall -Werror -o 03.out ./src/03.c
+
+05: src/05.cpp
+	clang++ -g -Wall -Werror -o 05.out ./src/05.cpp
 
 clean:
 	rm -f 01.out
