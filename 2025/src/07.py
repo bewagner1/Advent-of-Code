@@ -30,6 +30,32 @@ def split(grid):
     return grid
 
 
+def search(grid, start_col):
+    rows, cols = len(grid), len(grid[0])
+    
+    # dp[col] = number of paths from this column
+    dp = [0] * cols
+    
+    # Initialize bottom row
+    for col in range(cols):
+        if grid[rows - 1][col] == '|':
+            dp[col] = 1
+    
+    # Work backwards from second-to-last row
+    for row in range(rows - 2, -1, -1):
+        new_dp = [0] * cols
+        for col in range(cols):
+            if grid[row + 1][col] == '|':
+                new_dp[col] = dp[col]
+            elif grid[row + 1][col] == '^':
+                left = dp[col - 1] if col > 0 else 1
+                right = dp[col + 1] if col < cols - 1 else 1
+                new_dp[col] = left + right
+        dp = new_dp
+    
+    return dp[start_col]
+
+
 def main(grid, part_two=False):
 
     grid = split(grid)
@@ -38,7 +64,8 @@ def main(grid, part_two=False):
         for j in range(len(grid[i])):
             if grid[i][j] == '^' and grid[i-1][j] == '|': count += 1
 
-    if part_two: print(f"There are {2 * count - 1} possible paths")
+    start_col = grid[0].find("S")
+    if part_two: print(f"There are {search(grid, start_col)} possible paths")
     else: print(f"There are {count} splits")
 
 
