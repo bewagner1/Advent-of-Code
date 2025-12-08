@@ -57,7 +57,6 @@ def main(path, part):
     total = 0
     round_total = count_accessible(grid, part_two=part==2)
     while round_total > 0 and part == 2:
-        if part == 1: break
         total += round_total
         round_total = count_accessible(grid, part_two=part==2)
 
