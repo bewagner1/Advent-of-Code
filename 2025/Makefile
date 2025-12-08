@@ -19,3 +19,5 @@ clean:
 	rm -rf 02.out.dSYM
 	rm -f 03.out
 	rm -rf 03.out.dSYM
+	rm -f 05.out
+	rm -rf 05.out.dSYM
