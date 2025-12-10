@@ -41,18 +41,21 @@ int main(int argc, char* argv[])
         points.emplace_back(p);
     }
 
-    long max_area = 0;
-    long area;
-    for (int i=0; i<points.size()-1; ++i)
+    if (part == 1)
     {
-        for (int j=i+1; j<points.size(); ++j)
+        long max_area = 0;
+        long area;
+        for (int i=0; i<points.size()-1; ++i)
         {
-            area = (points[i].first - points[j].first + 1) * (points[i].second - points[j].second + 1);
-            if (abs(area) > max_area) max_area = abs(area);
+            for (int j=i+1; j<points.size(); ++j)
+            {
+                area = (points[i].first - points[j].first + 1) * (points[i].second - points[j].second + 1);
+                if (abs(area) > max_area) max_area = abs(area);
+            }
         }
-    }
 
-    std::cout << "The maximum area is " << max_area << std::endl;
+        std::cout << "The maximum area is " << max_area << std::endl;
+    }
 
     return 0;
 }
