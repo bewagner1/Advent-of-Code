@@ -55,149 +55,140 @@ int main(int argc, char* argv[])
     {
         for (int j=i+1; j<points.size(); ++j)
         {
-            xsq = points.at(i).at(0) - points.at(j).at(0);
-            ysq = points.at(i).at(1) - points.at(j).at(1);
-            zsq = points.at(i).at(2) - points.at(j).at(2);
+            xsq = points[i][0] - points[j][0];
+            ysq = points[i][1] - points[j][1];
+            zsq = points[i][2] - points[j][2];
 
             xsq = xsq * xsq;
             ysq = ysq * ysq;
             zsq = zsq * zsq;
 
-            dists.at(i).at(j) = sqrt(xsq + ysq + zsq);
+            dists[i][j] = sqrt(xsq + ysq + zsq);
         }
     }
 
-    if (part == 2)
+    std::priority_queue<double, std::vector<double>, std::greater<double>> heap;
+    for (int i=0; i<points.size()-1; ++i)
     {
-        std::vector<int> closest_p(points.size());
-        double c;
-        for (int p=0; p<points.size(); ++p)
+        for (int j=i+1; j<points.size(); ++j)
         {
-            c = std::numeric_limits<double>::infinity();
-            for (int i=0; i<p; i++)
-            {
-                if (dists.at(i).at(p) < c)
-                {
-                    closest_p.at(p) = i;
-                    c = dists.at(i).at(p);
-                }
-            }
-            for (int i=p+1; i<points.size(); ++i)
-            {
-                if (dists.at(p).at(i) < c)
-                {
-                    closest_p.at(p) = i;
-                    c = dists.at(p).at(i);
-                }
-            }
+            heap.push(dists[i][j]);
         }
-
-        double mx = 0;
-        long xmul;
-        for (int p=0; p<points.size(); ++p)
-        {
-            std::cout << "(" << p << ", " << closest_p.at(p) << ")";
-            if (dists.at(p).at(closest_p.at(p)) > mx)
-            {
-                mx = dists.at(p).at(closest_p.at(p));
-                xmul = points.at(p).at(0) * points.at(closest_p.at(p)).at(0);
-                std::cout << "*";
-            }
-            std::cout << std::endl;
-        }
-
-        std::cout << xmul << std::endl;
-
-        return 0;
-    }
-
-
-    std::priority_queue<double> min_dists;
-    int max_size = strstr(argv[1], "example") ? 10 : 1000;
-    double d;
-    for (int i=0; i<dists.size()-1; i++)
-    {
-        for (int j=i+1; j<dists.size(); j++)
-        {
-            d = dists.at(i).at(j);
-            if (min_dists.empty()) { min_dists.push(d); continue; }
-            if (d < min_dists.top() && min_dists.size() >= max_size)
-            {
-                min_dists.pop();
-                min_dists.push(d);
-            } else if (d < min_dists.top())
-            {
-                min_dists.push(d);
-            }
-        }
-    }
-
-    std::vector<std::pair<int, int>> connections(min_dists.size());
-    std::cout << min_dists.size() << std::endl;
-    int index = 0;
-    int flag = 0;
-    while (!min_dists.empty())
-    {
-        d = min_dists.top();
-        for (int i=0; i<dists.size()-1; i++)
-        {
-            for (int j=i+1; j<dists.size(); j++)
-            {
-                if (d == dists.at(i).at(j))
-                {
-                    connections.at(index).first = i;
-                    connections.at(index).second = j;
-                    index++;
-                    flag = 1;
-                    break;
-                }
-                if (flag) break;
-            }
-        }
-        min_dists.pop();
-        flag = 0;
     }
 
     std::vector<std::set<int>> circuits;
-    circuits.emplace_back(std::set<int>({connections.at(0).first, connections.at(0).second}));
-    int l,r;
-    for (int i=1; i<connections.size(); i++)
+    int max_connections = strstr(argv[1], "example") ? 10 : 1000;
+    int n_connections = 0;
+    int r,c,flag;
+    while (n_connections < max_connections)
     {
-        l = connections.at(i).first;
-        r = connections.at(i).second;
-
-        for (int j=0; j<circuits.size(); j++)
+        flag = 0;
+        for (int i=0; i<points.size()-1; ++i)
         {
-            if (circuits.at(j).count(l) && circuits.at(j).count(r))
+            for (int j=i+1; j<points.size(); ++j)
             {
-                flag = 1;
-                break;
+                if (dists[i][j] == heap.top())
+                {
+                    r = i;
+                    c = j;
+                    flag = 1;
+                    break;
+                }
             }
-            else if (circuits.at(j).count(l) || circuits.at(j).count(r))
+            if (flag) break;
+        }
+
+        for (int i=0; i<circuits.size(); ++i)
+        {
+            if (circuits[i].count(r) || circuits[i].count(c))
             {
-                circuits.at(j).emplace(l);
-                circuits.at(j).emplace(r);
-                flag = 1;
+                circuits[i].emplace(r);
+                circuits[i].emplace(c);
+                n_connections++;
+                flag = 0;
                 break;
             }
         }
+        if (flag)
+        {
+            std::set<int> s = {r, c};
+            circuits.emplace_back(s);
+            n_connections++;
+        }
 
-        if (!flag) circuits.emplace_back(std::set<int>({l, r}));
-        flag = 0;
+        circuits = consolidate(circuits);
+        heap.pop();
     }
-    circuits = consolidate(circuits);
 
-    std::priority_queue<int> sizes;
-    for (std::set<int> s : circuits) sizes.push(s.size());
-
-    int total = 1;
-    for (int i=0; i<3; i++)
+    if (part == 1)
     {
-        total = total * sizes.top();
-        sizes.pop();
-    }
+        std::priority_queue<double, std::vector<double>, std::greater<double>> sizes;
+        for (std::set<int> s : circuits)
+        {
+            if (sizes.size() < 3)
+            {
+                sizes.push(s.size());
+            }
+            else if (s.size() > sizes.top())
+            {
+                sizes.pop();
+                sizes.push(s.size());
+            }
+        }
 
-    std::cout << "Multiplying the largest three circuits yields " << total << std::endl;
+        long total = 1;
+        while (!sizes.empty())
+        {
+            total = total * sizes.top();
+            sizes.pop();
+        }
+        std::cout << "The product of the sizes of the largest 3 circuits is " << total << std::endl;
+    }
+    else if (part == 2)
+    {
+        while (circuits[0].size() < points.size())
+        {
+            if (heap.empty()) {std::cout << "Trying to make too many connections!" << std::endl; exit(1);}
+            flag = 0;
+            for (int i=0; i<points.size()-1; ++i)
+            {
+                for (int j=i+1; j<points.size(); ++j)
+                {
+                    if (dists[i][j] == heap.top())
+                    {
+                        r = i;
+                        c = j;
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag) break;
+            }
+
+            for (int i=0; i<circuits.size(); ++i)
+            {
+                if (circuits[i].count(r) || circuits[i].count(c))
+                {
+                    circuits[i].emplace(r);
+                    circuits[i].emplace(c);
+                    n_connections++;
+                    flag = 0;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                std::set<int> s = {r, c};
+                circuits.emplace_back(s);
+                n_connections++;
+            }
+
+            circuits = consolidate(circuits);
+            heap.pop();
+        }
+        std::cout << circuits[0].size() << std::endl;
+        std::cout << points[r][0] * points[c][0] << std::endl;
+    }
 
     return 0;
 }
@@ -208,6 +199,7 @@ bool intersects(const std::set<int>& a, const std::set<int>& b) {
         if (b.count(x)) return true;
     return false;
 }
+
 
 std::vector<std::set<int>> consolidate(std::vector<std::set<int>> v) {
     bool changed = true;
