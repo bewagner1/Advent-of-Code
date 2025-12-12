@@ -4,15 +4,36 @@ Docstring for 2025.src.12
 
 
 from argparse import ArgumentParser
+import re
 
 
 def parse_puzzle(path):
 
     presents = []
     regions = []
+    pattern = r'[\d]+'
 
     with open(path, 'r') as f:
-        pass
+
+        ln = f.readline()
+        while ln:
+            
+            if ':' in ln and 'x' in ln:
+                
+                r = ln.split(':')
+                r[-1] = [int(x) for x in re.findall(pattern, r[-1])]
+                regions.append(r)
+
+            elif ':' in ln:
+
+                ln = f.readline()
+                p = []
+                while ln != '\n':
+                    p.append(ln.rstrip())
+                    ln = f.readline()
+                presents.append(p)
+            
+            ln = f.readline()
 
     return presents, regions
 
@@ -26,22 +47,28 @@ def present_area(present):
     return count
 
 
-def valid_region(region, presents):
+def valid_region(dims, p_count, presents):
+
+    r = []
+    for i in range(dims[0]):
+        r.append('.' * dims[1])
+
+    
+
     return
 
 
 def main(puzzle, part_two=False):
 
-    # Read in and parse file
     presents, regions = parse_puzzle(puzzle)
 
     n_valid = 0
     for r in regions:
 
-        dims = r[0].split('x')
-        if dims[0] * dims[1] < sum([present_area(p) * r[1][i] for i,p in enumerate(presents)]): continue
+        dims = [int(x) for x in r[0].split('x')]
 
-        if valid_region(r, presents): n_valid += 1
+        if dims[0] * dims[1] < sum(present_area(p) * r[1][i] for i,p in enumerate(presents)): continue
+        if valid_region(dims, r[-1], presents): n_valid += 1
 
 
     print(f"There are {n_valid} regions that fit all the presents litsed")
