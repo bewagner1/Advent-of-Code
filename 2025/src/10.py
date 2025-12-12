@@ -38,7 +38,7 @@ def press(lights, button):
 
 def find_min_presses(machine):
 
-    final_lights, buttons, joltage = read_machine(machine)
+    final_lights, buttons, _ = read_machine(machine)
     lights = '.' * len(final_lights)
 
     for l in range(1, len(buttons) + 1):
@@ -48,6 +48,37 @@ def find_min_presses(machine):
             if nl == final_lights: return l
             
 
+def part2(f):
+    from z3 import Solver, Int, Sum, sat
+
+    machines = []
+    for parts in [line.strip().split() for line in f]:
+        solution = [c == "#" for c in parts[0][1:-1]]
+        buttons = [[int(b) for b in button[1:-1].split(",")] for button in parts[1:-1]]
+        voltages = [int(v) for v in parts[-1][1:-1].split(",")]
+        machines.append([solution, buttons, voltages])
+
+    total = 0
+    for _, buttons, voltages in machines:
+        solver = Solver()
+
+        bvars = [Int(f"a{n}") for n in range(len(buttons))]
+        for b in bvars:
+            solver.add(b >= 0)
+
+        for i,v in enumerate(voltages):
+            vvars = [bvars[j] for j,button in enumerate(buttons) if i in button]
+            solver.add(Sum(vvars) == v)
+
+        while solver.check() == sat:
+            model = solver.model()
+            n = sum([model[d].as_long() for d in model])
+            solver.add(Sum(bvars) < n)
+
+        total += n
+    print(f"The minimum number of button presses is {total}")
+    
+    
 def main(machines, part_two=False):
 
     n_presses = 0
@@ -55,6 +86,7 @@ def main(machines, part_two=False):
         if not part_two: n_presses += find_min_presses(l)
 
     if not part_two: print(f"The minimum number of button presses is {n_presses}")
+    else: part2(machines)
 
     return
 
