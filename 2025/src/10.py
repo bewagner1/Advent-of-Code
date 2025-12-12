@@ -4,6 +4,7 @@ Docstring for 2025.src.10
 
 import re
 from argparse import ArgumentParser
+from itertools import combinations
 
 
 def read_machine(ln):
@@ -16,39 +17,36 @@ def read_machine(ln):
         coords_section = match.group(2)
         brace_nums = match.group(3)
         
-        coord_pattern = r'\((\d+)(?:,(\d+))?\)'
-        coords = []
-        for coord_match in re.finditer(coord_pattern, coords_section):
-            if coord_match.group(2):
-                coords.append(coord_match.group(1) + coord_match.group(2))
-            else:
-                coords.append(coord_match.group(1))
+        coord_pattern = r'\((\d+(?:,\d+)*)\)'
+        coords = re.findall(coord_pattern, coords_section)
+        coords = [''.join([x.strip() for x in m.split(',')]) for m in coords]
         
         # Parse brace numbers as strings
-        brace_list = "".join(brace_nums.split(','))
+        brace_list = brace_nums.split(',')
 
     return pattern, coords, brace_list
 
 
 def press(lights, button):
-    return
+
+    for b in button:
+        b = int(b)
+        if lights[b] == '.': lights = lights[:b] + '#' + lights[b+1:]
+        else: lights = lights[:b] + '.' + lights[b+1:]
+    return lights
 
 
 def find_min_presses(machine):
 
     final_lights, buttons, joltage = read_machine(machine)
     lights = '.' * len(final_lights)
-    next_lights = lights
 
-    n_presses = []
-    for b in buttons:
-        next_lights = press(lights, b)
-        if next_lights == final_lights: return 1
-
-    return min(n_presses)
-
-        
-
+    for l in range(1, len(buttons) + 1):
+        for c in combinations(buttons, l):
+            nl = lights
+            for b in c: nl = press(nl, b)
+            if nl == final_lights: return l
+            
 
 def main(machines, part_two=False):
 
