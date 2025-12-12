@@ -74,6 +74,7 @@ def main(puzzle, part_two=False):
         dims = [int(x) for x in r[0].split('x')]
 
         if dims[0] * dims[1] < sum(present_area(p) * r[1][i] for i,p in enumerate(presents)): continue
+        # if valid_region(dims, r[-1], presents): n_valid += 1
         else: n_valid += 1
 
 
