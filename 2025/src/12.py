@@ -47,15 +47,21 @@ def present_area(present):
     return count
 
 
+def fit(present, region):
+    return region
+
+
 def valid_region(dims, p_count, presents):
 
     r = []
     for i in range(dims[0]):
         r.append('.' * dims[1])
 
-    
+    for i, p in enumerate(presents):
+        for i in range(p_count[i]):
+            r = fit(p, r)
 
-    return
+    return present_area(r) == sum(present_area(p) * p_count[i] for i,p in enumerate(presents))
 
 
 def main(puzzle, part_two=False):
@@ -68,7 +74,7 @@ def main(puzzle, part_two=False):
         dims = [int(x) for x in r[0].split('x')]
 
         if dims[0] * dims[1] < sum(present_area(p) * r[1][i] for i,p in enumerate(presents)): continue
-        if valid_region(dims, r[-1], presents): n_valid += 1
+        else: n_valid += 1
 
 
     print(f"There are {n_valid} regions that fit all the presents litsed")
