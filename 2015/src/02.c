@@ -60,6 +60,8 @@ int main(int argc, char* argv[])
             exit(1);
         }
     }
+    fclose(infile);
+
     printf("They should order %ld feet or ribbon\n", total);
 
     return 0;
