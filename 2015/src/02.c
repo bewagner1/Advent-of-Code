@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     if (argc != 3)
     {
-        printf("Usage: ./01.out <path/to/puzzle.txt> <part>\n");
+        printf("Usage: ./02.out <path/to/puzzle.txt> <part>\n");
         printf("       <path/to/puzzle>: path from cwd to puzzle\n");
         printf("       <part>: 1 or 2\n");
         exit(1);
