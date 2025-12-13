@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
     {
         points.emplace_back(x, y);
     }
+    infile.close();
     
     long max_area = 0;
     size_t n = points.size();

@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
             exit(1);
         }
     }
+    fclose(infile);
 
     printf("The instructions take Santa to floor %d\n", floor);
 

@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
         p = {x, y, z};
         points.emplace_back(p);
     }
+    infile.close();
 
     std::vector<std::vector<double>> dists(points.size(), std::vector<double>(points.size()));
     double xsq, ysq, zsq;
