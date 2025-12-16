@@ -1,4 +1,4 @@
-all: 01 02 03 06 11 18 19 25
+all: 01 02 03 06 11 18 19 20 25
 
 01: src/01.c
 	gcc -g -Wall -Werror -o 01.out ./src/01.c
@@ -18,6 +18,9 @@ all: 01 02 03 06 11 18 19 25
 19: src/19.cpp
 	clang++ -g -Wall -Werror -o 19.out ./src/19.cpp
 
+20: src/20.c
+	gcc -g -Wall -Werror -o 20.out ./src/20.c
+
 25: src/25.c
 	gcc -g -Wall -Werror -o 25.out ./src/25.c
 
@@ -34,5 +37,7 @@ clean:
 	rm -rf 18.out.dSYM
 	rm  -f 19.out
 	rm -rf 19.out.dSYM
+	rm  -f 20.out
+	rm -rf 20.out.dSYM
 	rm  -f 25.out
 	rm -rf 25.out.dSYM
