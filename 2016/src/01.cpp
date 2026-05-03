@@ -7,7 +7,6 @@
 void part_one(std::fstream& infile);
 void part_two(std::fstream& infile);
 
-
 int main(int argc, char* argv[])
 {
     std::fstream infile(argv[2]);
