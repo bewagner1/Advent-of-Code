@@ -1,4 +1,4 @@
-all: 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+all: 01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
 
 01:
 	clang++ -g -Wall -Werror src/01.cpp -o 01.out
@@ -8,9 +8,6 @@ all: 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
 
 03:
 	clang++ -g -Wall -Werror src/03.cpp -o 03.out
-
-04:
-	clang++ -g -Wall -Werror src/04.cpp -o 04.out
 
 05:
 	clang++ -g -Wall -Werror src/05.cpp -o 05.out
