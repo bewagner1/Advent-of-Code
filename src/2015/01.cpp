@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
       basement = true;
     }
   }
+  puzzle.close();
 
   std::cout << "Santa ends up at floor " << floor << std::endl;
   return 0;
