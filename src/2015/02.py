@@ -11,13 +11,16 @@ def main():
 
     with open(args.puzzle) as f:
         wrapping_paper = 0
+        ribbon = 0
         for ln in f:
             l, w, h = ln.split("x")
             l, w, h = int(l), int(w), int(h)
             fb, lr, bt = 2 * l * w, 2 * w * h, 2 * l * h
             slack = min(fb, lr, bt) // 2
             wrapping_paper += fb + lr + bt + slack
+            ribbon += 2 * (l + w + h - max(l, w, h)) + l * w * h
         print(f"The elves should order {wrapping_paper} square feet of wrapping paper")
+        print(f"The elves should order {ribbon} feet of ribbon")
 
 
     return
