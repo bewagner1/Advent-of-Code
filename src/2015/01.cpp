@@ -5,7 +5,6 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <stack>
 
 int main(int argc, char *argv[]) {
 
@@ -28,13 +27,22 @@ int main(int argc, char *argv[]) {
 
   char c;
   int floor = 0;
+  int position = 0;
+  bool basement = false;
   while (puzzle >> c) {
     if (c == '(')
       ++floor;
     else if (c == ')')
       --floor;
+
+    ++position;
+    if (floor == -1 && !basement) {
+      std::cout << "Santa first enters the basement at position " << position
+                << std::endl;
+      basement = true;
+    }
   }
 
-  std::cout << floor << std::endl;
+  std::cout << "Santa ends up at floor " << floor << std::endl;
   return 0;
 }
