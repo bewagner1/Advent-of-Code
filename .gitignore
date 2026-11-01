@@ -1,4 +1,5 @@
+# Hidden files
 .vscode/
-**.out
-**.dSYM
+
+# Puzzle inputs
 puzzles/
