@@ -60,9 +60,53 @@ int main(int argc, char *argv[]) {
   for (size_t i = 0; i < lights.size(); ++i) {
     if (lights[i])
       ++count;
+    lights[i] = 0;
   }
-
   std::cout << "There are " << count << " lights on" << std::endl;
+
+  try {
+    puzzle.open(argv[1]);
+  } catch (const std::exception &e) {
+    std::cerr << "ERROR: Unable to open puzzle - " << e.what() << std::endl;
+    return 1;
+  }
+  while (puzzle >> action) {
+    if (action == "toggle") {
+      if (!(puzzle >> bx >> _comma >> by >> _through >> tx >> _comma >> ty)) {
+        std::cerr << "ERROR: Unable to read puzzle" << std::endl;
+        puzzle.close();
+        return 1;
+      }
+      for (size_t i = bx; i <= tx; ++i) {
+        for (size_t j = by; j <= ty; ++j) {
+          lights[i * w + j] += 2;
+        }
+      }
+    } else {
+      if (!(puzzle >> status >> bx >> _comma >> by >> _through >> tx >>
+            _comma >> ty)) {
+        std::cerr << "ERROR: Unable to read puzzle" << std::endl;
+        puzzle.close();
+        return 1;
+      }
+      for (size_t i = bx; i <= tx; ++i) {
+        for (size_t j = by; j <= ty; ++j) {
+          if (status == "on") {
+            lights[i * w + j]++;
+          } else {
+            lights[i * w + j] =
+                lights[i * w + j] == 0 ? 0 : lights[i * w + j] - 1;
+          }
+        }
+      }
+    }
+  }
+  puzzle.close();
+
+  count = 0;
+  for (size_t i = 0; i < lights.size(); ++i)
+    count += lights[i];
+  std::cout << "The total brightness is " << count << std::endl;
 
   return 0;
 }
