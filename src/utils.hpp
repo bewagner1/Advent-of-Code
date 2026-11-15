@@ -6,6 +6,7 @@
 #define UTILS_HPP
 
 #include <cstddef>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -43,6 +44,18 @@ inline std::string join(const std::vector<std::string> &v,
     s += v[i] + delim;
   }
   return s + v.back();
+}
+
+static const std::set<char> decs({'0', '1', '2', '3', '4', '5', '6', '7', '8',
+                                  '9'});
+/**
+ * Checks if a string is a decimal
+ */
+inline bool is_decimal(const std::string &s) {
+  for (size_t i = 0; i < s.size(); ++i) {
+    if (decs.find(s[i]) == decs.end()) return false;
+  }
+  return true;
 }
 
 #endif // UTILS_HPP
