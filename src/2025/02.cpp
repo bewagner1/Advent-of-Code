@@ -3,6 +3,8 @@
  */
 
 #include "utils.hpp"
+#include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -28,19 +30,36 @@ int main(int argc, char *argv[]) {
   }
   puzzle.close();
 
-  unsigned long invalid = 0;
+  unsigned long part_one = 0, part_two = 0;
   std::vector<std::string> ranges = split(ln, ",");
   for (size_t i = 0; i < ranges.size(); ++i) {
     std::vector<std::string> bounds = split(ranges[i], "-");
     long lower = std::stol(bounds[0]), upper = std::stol(bounds[1]);
     for (long v = lower; v <= upper; ++v) {
       std::string vstr = std::to_string(v);
-      if (vstr.size() % 2 != 0) continue;
-      size_t half = vstr.size() / 2;
-      if (vstr.substr(0, half) == vstr.substr(half)) invalid += v;
+      size_t sz = vstr.size(), mx = std::max(std::sqrt(v), 2.0);
+
+      for (size_t n = 2; n <= mx; ++n) {
+        if (sz % n != 0) continue;
+        size_t l = sz / n;
+        bool invalid = true;
+        for (long k = 1; k < n; ++k) {
+          if (vstr.substr(0, l) != vstr.substr(k * l, l)) {
+            invalid = false;
+            break;
+          }
+        }
+        if (invalid) {
+          if (n == 2) part_one += v;
+          part_two += v;
+          break;
+        }
+      }
     }
   }
-  std::cout << "There sum of the invalid IDs is " << invalid << std::endl;
+
+  std::cout << "There sum of the invalid IDs is " << part_one << std::endl;
+  std::cout << "There sum of the invalid IDs is " << part_two << std::endl;
 
   return 0;
 }
