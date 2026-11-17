@@ -52,6 +52,7 @@ static const std::set<char> decs({'0', '1', '2', '3', '4', '5', '6', '7', '8',
  * Checks if a string is a decimal
  */
 inline bool is_decimal(const std::string &s) {
+  if (s == "") return false;
   for (size_t i = 0; i < s.size(); ++i) {
     if (decs.find(s[i]) == decs.end()) return false;
   }
