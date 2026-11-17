@@ -58,4 +58,13 @@ inline bool is_decimal(const std::string &s) {
   return true;
 }
 
+/**
+ * Checks for valid bounds of a two dimensional array
+ */
+template <typename T> inline bool bounds_check(T i, T j, T ni, T nj) {
+  if (i < 0 || i >= ni) return false;
+  if (j < 0 || j >= nj) return false;
+  return true;
+}
+
 #endif // UTILS_HPP
