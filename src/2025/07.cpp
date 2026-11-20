@@ -29,9 +29,8 @@ int main(int argc, char *argv[]) {
   }
   puzzle.close();
 
-  const size_t nr = path.size();
+  const size_t nr = path.size(), nc = path[0].size();
   for (size_t r = 1; r < nr; ++r) {
-    const size_t nc = path[r].size();
     for (size_t c = 0; c < nc; ++c) {
       if (path[r][c] == '^') continue;
       if (path[r - 1][c] == '|' || path[r - 1][c] == 'S') {
@@ -60,7 +59,25 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  std::vector<unsigned long> exits(nc);
+  for (size_t i = 0; i < nc; ++i) {
+    exits[i] = path[nr - 1][i] == '|' ? 1 : 0;
+  }
+  for (size_t i = nr - 2; i > 0; i--) {
+    std::vector<unsigned long> temp(nc);
+    for (size_t c = 0; c < nc; ++c) {
+      if (path[i][c] == '|') {
+        temp[c] = exits[c];
+      } else if (path[i][c] == '^') {
+        temp[c] = (c > 0 ? exits[c - 1] : 1) + (c < nc - 1 ? exits[c + 1] : 1);
+      }
+    }
+    exits = temp;
+  }
+  unsigned long part_two = exits[path[0].find('S')];
+
   std::cout << "The beam will be split " << part_one << " times" << std::endl;
+  std::cout << "There are " << part_two << " possible paths" << std::endl;
 
   return 0;
 }
