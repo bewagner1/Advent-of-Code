@@ -17,6 +17,8 @@ def main():
             lights = [-1 if p == '.' else 1 for p in parts[0][1:-1]]
             buttons = [[int(p) for p in pa[1:-1].split(',')] for pa in parts[1:-1]]
             joltages = [int(p) for p in parts[-1][1:-1].split(',')]
+
+		# Minimize button presses
             
     return
 
